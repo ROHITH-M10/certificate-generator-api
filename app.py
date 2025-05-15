@@ -1,8 +1,10 @@
 from flask import Flask, request, send_file, jsonify
-import fitz  # PyMuPDF
+from flask_cors import CORS
+import fitz
 import os
 
 app = Flask(__name__)
+CORS(app)  # enable CORS for all domains by default
 
 TEMPLATE_PATH = "certificate_template.pdf"
 OUTPUT_DIR = "generated_certificates"
@@ -37,4 +39,5 @@ def generate_certificate():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
+    print(f"Starting server on port {port}...")
     app.run(host="0.0.0.0", port=port)
