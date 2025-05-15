@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-import fitz  # PyMuPDF
+import fitz
 import os
 
 app = Flask(__name__)
@@ -22,7 +22,6 @@ def generate_certificate():
 
     output_path = os.path.join(OUTPUT_DIR, f"{roll}_{name}.pdf")
 
-    # Avoid regenerating same file
     if os.path.exists(output_path):
         return jsonify({"status": "already exists"})
 
@@ -34,3 +33,7 @@ def generate_certificate():
     doc.close()
 
     return jsonify({"status": "generated", "file": f"{roll}_{name}.pdf"})
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
