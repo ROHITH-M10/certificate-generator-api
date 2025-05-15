@@ -1,5 +1,5 @@
-from flask import Flask, request, jsonify
-import fitz
+from flask import Flask, request, send_file, jsonify
+import fitz  # PyMuPDF
 import os
 
 app = Flask(__name__)
@@ -20,19 +20,19 @@ def generate_certificate():
     if not name or not roll:
         return jsonify({"error": "Missing name or roll"}), 400
 
-    output_path = os.path.join(OUTPUT_DIR, f"{roll}_{name}.pdf")
+    filename = f"{roll}_{name}.pdf"
+    output_path = os.path.join(OUTPUT_DIR, filename)
 
-    if os.path.exists(output_path):
-        return jsonify({"status": "already exists"})
+    if not os.path.exists(output_path):
+        doc = fitz.open(TEMPLATE_PATH)
+        page = doc[0]
+        page.insert_text(NAME_POSITION, name, fontsize=20, fill=(0, 0, 0))
+        page.insert_text(ROLL_POSITION, roll, fontsize=20, fill=(0, 0, 0))
+        doc.save(output_path)
+        doc.close()
 
-    doc = fitz.open(TEMPLATE_PATH)
-    page = doc[0]
-    page.insert_text(NAME_POSITION, name, fontsize=20, fill=(0, 0, 0))
-    page.insert_text(ROLL_POSITION, roll, fontsize=20, fill=(0, 0, 0))
-    doc.save(output_path)
-    doc.close()
-
-    return jsonify({"status": "generated", "file": f"{roll}_{name}.pdf"})
+    # ✅ Return the actual PDF file
+    return send_file(output_path, as_attachment=True, mimetype='application/pdf')
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
