@@ -13,6 +13,7 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 @app.route("/generate", methods=["POST"])
 def generate_certificate():
+    print("Received request with data:", request.json)
     data = request.json
     name = data.get("name")
     roll = data.get("roll")
