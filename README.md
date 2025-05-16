@@ -47,7 +47,7 @@ certificate-generator/
 6. Set environment variable (optional):
    - `PORT` = `10000` (Render uses dynamic ports internally)
 7. Deploy and note the generated URL  
-   (e.g. `https://certificate-generator-api-xyz.onrender.com/generate`)
+   (e.g. `https://<URL>.onrender.com/generate`)
 
 ✅ Done — your backend is now live.
 
